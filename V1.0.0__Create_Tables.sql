@@ -55,14 +55,13 @@ create table partida
     id_major            integer not null,
     id_equipe_mandante  integer not null,
     id_equipe_visitante integer not null,
-    id_equipe_ganhadora integer not null,
-    /* TODO: adicionar campo com placar final */
+    id_equipe_vencedora integer,
 
     primary key (id),
     foreign key (id_major) references majorcsgo (id),
     foreign key (id_equipe_mandante) references equipe (id),
     foreign key (id_equipe_visitante) references equipe (id),
-    foreign key (id_equipe_ganhadora) references equipe (id)
+    foreign key (id_equipe_vencedora) references equipe (id)
 );
 
 /**
@@ -73,12 +72,14 @@ create table partida
 create table turno
 (
     id                  serial  not null,
+    id_partida          integer not null,
     id_mapa             integer not null,
-    id_equipe_vencedora integer not null,
+    id_equipe_vencedora integer,
 
     primary key (id),
+    foreign key (id_partida) references partida (id),
     foreign key (id_mapa) references mapa (id),
-    foreign key (id_equipe_vencedor) references equipe (id)
+    foreign key (id_equipe_vencedora) references equipe (id)
 );
 
 /**
@@ -95,4 +96,30 @@ create table rodada
     primary key (id),
     foreign key (id_turno) references turno (id),
     foreign key (id_equipe_vencedora) references equipe (id)
+);
+
+create table estatisticas_jogador_rodada
+(
+    id          serial  not null,
+    id_rodada   integer not null,
+    id_jogador  integer not null,
+    matou       integer,
+    assistencia integer,
+    morreu      integer,
+
+    primary key (id),
+    foreign key (id_rodada) references rodada (id),
+    foreign key (id_jogador) references jogador (id)
+);
+
+create table estatisticas_jogador
+(
+    id          serial  not null,
+    id_jogador  integer not null,
+    matou       integer not null default 0,
+    assistencia integer not null default 0,
+    morreu      integer not null default 0,
+
+    primary key (id),
+    foreign key (id_jogador) references jogador (id)
 );
