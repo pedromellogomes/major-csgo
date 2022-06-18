@@ -1,5 +1,5 @@
 /**
-  1. Dado partida X, retorna a quantidade de turnos já jogados.
+    1. Dado partida X, retorna a quantidade de turnos já jogados.
  */
 CREATE OR REPLACE FUNCTION conta_turnos_por_partida(
     idPartida int
@@ -16,7 +16,7 @@ $$
 LANGUAGE plpgsql;
 
 /**
-  2. Dada partida X, retorna verdadeiro se uma das equipe já venceu dois turnos.
+    2. Dada partida X, retorna verdadeiro se uma das equipe já venceu dois turnos.
  */
 CREATE OR REPLACE FUNCTION alguma_equipe_venceu_dois_turnos_na_mesma_partida(
     idPartida int
@@ -39,7 +39,7 @@ $$
     LANGUAGE plpgsql;
 
 /**
-  3. Dado turno X, retorna quantas rodadas foram ganhas pela equipe Y.
+    3. Dado turno X, retorna quantas rodadas foram ganhas pela equipe Y.
  */
 CREATE OR REPLACE FUNCTION conta_rodadas_ganhas_por_equipe_em_determinado_turno(
     idTurno int, idEquipeVencedora int
@@ -56,7 +56,7 @@ $$
 LANGUAGE plpgsql;
 
 /**
-  4. Dado turno X,
+    4. Dado turno X,
  */
 CREATE OR REPLACE FUNCTION conta_rodadas_por_turno(
     idTurno int
@@ -71,7 +71,7 @@ $$
     LANGUAGE plpgsql;
 
 /**
-  5. Dado turno X, calcula a diferença de turnos ganhos entre as equipes.
+    5. Dado turno X, calcula a diferença de turnos ganhos entre as equipes.
  */
 CREATE OR REPLACE FUNCTION diferenca_de_vitorias_entre_equipe_por_turno(
     idTurno int
@@ -92,10 +92,10 @@ $$
     LANGUAGE plpgsql;
 
 /**
-  6. Dado turno X, insere novo registro se:
-    ( quantidade_rodadas >= 31 )
-        &&
-    ( vitoria_visitante - vitoria_mandante >= [2, -2] )
+    6. Dado turno X, insere novo registro se:
+        ( quantidade_rodadas >= 31 )
+            &&
+        ( vitoria_visitante - vitoria_mandante >= [2, -2] )
  */
 CREATE OR REPLACE FUNCTION valida_se_turno_terminou_antes_de_inserir_nova_rodada()
   RETURNS TRIGGER
@@ -118,10 +118,10 @@ END;
 $$;
 
 /**
-  7. Dado partida X, insere novo registro se:
-    ( quantidade_turnos < 3 )
-        ||
-    ( COUNT(id_equipe_vencedora) < 2 )
+    7. Dado partida X, insere novo registro se:
+        ( quantidade_turnos < 3 )
+            ||
+        ( COUNT(id_equipe_vencedora) < 2 )
  */
 CREATE OR REPLACE FUNCTION valida_se_partida_terminou_antes_de_inserir_nova_turno()
   RETURNS TRIGGER
@@ -143,6 +143,10 @@ BEGIN
 END;
 $$;
 
+/**
+    8. Função da trigger para atualizar as estatisticas do jogador após
+        nova inserção na tabela estatisticas_jogador_rodada
+ */
 CREATE OR REPLACE FUNCTION atualiza_estatisticas_jogador()
     RETURNS TRIGGER
     LANGUAGE PLPGSQL
