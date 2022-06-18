@@ -142,3 +142,30 @@ BEGIN
     END IF;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION atualiza_estatisticas_jogador()
+    RETURNS TRIGGER
+    LANGUAGE PLPGSQL
+    AS
+$$
+    DECLARE
+        jogador estatisticas_jogador_rodada%ROWTYPE;
+BEGIN
+    RAISE NOTICE 'Atualizar as estatisticas do jogador a cada nova rodada jogada.';
+    SELECT * INTO jogador FROM estatisticas_jogador WHERE id_jogador = NEW.id_jogador;
+    IF NOT FOUND THEN
+        RAISE NOTICE 'NAO FOI ENCONTRADO';
+        INSERT INTO estatisticas_jogador (id_jogador, matou, assistencia, morreu)
+        VALUES (NEW.id_jogador, NEW.matou, NEW.assistencia, NEW.morreu);
+    ELSE
+        RAISE NOTICE 'FOI ENCONTRADO';
+        UPDATE estatisticas_jogador
+        SET matou = matou + NEW.matou,
+            assistencia = assistencia + NEW.assistencia,
+            morreu = morreu + NEW.morreu
+        WHERE id_jogador = NEW.id_jogador;
+    END IF;
+
+    RETURN NEW;
+END;
+$$;
