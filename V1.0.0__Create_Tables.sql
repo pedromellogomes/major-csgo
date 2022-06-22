@@ -16,7 +16,7 @@ create table mapa
     primary key (id)
 );
 
-create table equipe
+create table organizacao
 (
     id   serial not null,
     nome varchar(100),
@@ -24,7 +24,34 @@ create table equipe
     primary key (id)
 );
 
-create table historico_participacao
+create table jogador
+(
+    id        serial  not null,
+    nome      varchar(100),
+
+    primary key (id)
+);
+
+create table equipe
+(
+    id serial not null,
+    id_organizacao integer not null,
+    id_jogador_1 integer not null,
+    id_jogador_2 integer not null,
+    id_jogador_3 integer not null,
+    id_jogador_4 integer not null,
+    id_jogador_5 integer not null,
+
+    primary key (id),
+    foreign key (id_organizacao) references organizacao (id),
+    foreign key (id_jogador_1) references jogador (id),
+    foreign key (id_jogador_2) references jogador (id),
+    foreign key (id_jogador_3) references jogador (id),
+    foreign key (id_jogador_4) references jogador (id),
+    foreign key (id_jogador_5) references jogador (id)
+);
+
+create table equipe_major
 (
     id        serial  not null,
     id_major  integer not null,
@@ -32,16 +59,6 @@ create table historico_participacao
 
     primary key (id),
     foreign key (id_major) references majorcsgo (id),
-    foreign key (id_equipe) references equipe (id)
-);
-
-create table jogador
-(
-    id        serial  not null,
-    id_equipe integer not null,
-    nome      varchar(100),
-
-    primary key (id),
     foreign key (id_equipe) references equipe (id)
 );
 
@@ -59,9 +76,9 @@ create table partida
 
     primary key (id),
     foreign key (id_major) references majorcsgo (id),
-    foreign key (id_equipe_mandante) references equipe (id),
-    foreign key (id_equipe_visitante) references equipe (id),
-    foreign key (id_equipe_vencedora) references equipe (id)
+    foreign key (id_equipe_mandante) references equipe_major (id),
+    foreign key (id_equipe_visitante) references equipe_major (id),
+    foreign key (id_equipe_vencedora) references equipe_major (id)
 );
 
 /**
@@ -79,7 +96,7 @@ create table turno
     primary key (id),
     foreign key (id_partida) references partida (id),
     foreign key (id_mapa) references mapa (id),
-    foreign key (id_equipe_vencedora) references equipe (id)
+    foreign key (id_equipe_vencedora) references equipe_major (id)
 );
 
 /**
@@ -95,7 +112,7 @@ create table rodada
 
     primary key (id),
     foreign key (id_turno) references turno (id),
-    foreign key (id_equipe_vencedora) references equipe (id)
+    foreign key (id_equipe_vencedora) references equipe_major (id)
 );
 
 create table estatisticas_jogador_rodada
