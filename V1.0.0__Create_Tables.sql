@@ -51,6 +51,9 @@ create table equipe
     foreign key (id_jogador_5) references jogador (id)
 );
 
+alter table equipe
+    add constraint uk_equipe unique (id_organizacao, id_jogador_1, id_jogador_2, id_jogador_3, id_jogador_4, id_jogador_5);
+
 create table equipe_major
 (
     id        serial  not null,
@@ -61,6 +64,9 @@ create table equipe_major
     foreign key (id_major) references majorcsgo (id),
     foreign key (id_equipe) references equipe (id)
 );
+
+alter table equipe_major
+    add constraint uk_equipe_major unique (id_major, id_equipe);
 
 /**
  * RESTRIÇÕES
