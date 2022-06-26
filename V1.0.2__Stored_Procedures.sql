@@ -92,7 +92,71 @@ $$
     LANGUAGE plpgsql;
 
 /**
-    6. Dado turno X, insere novo registro se:
+	6. Retorna id da equipe no qual jogador esta presente em determinado major.
+	id_jogador
+	id_major
+
+	RETURN id_equipe
+*/
+CREATE OR REPLACE FUNCTION busca_id_equipe_para_jogador_em_determinado_major(
+    idJogador int, idMajor int
+) RETURNS integer AS
+$$
+BEGIN
+    RETURN (SELECT equipe.id
+            FROM equipe,
+                 jogador,
+                 majorcsgo
+            WHERE majorcsgo.id = idMajor
+                AND jogador.id = idJogador
+                AND equipe.id_jogador_1 = idJogador
+               OR equipe.id_jogador_2 = idJogador
+               OR equipe.id_jogador_3 = idJogador
+               OR equipe.id_jogador_4 = idJogador
+               OR equipe.id_jogador_5 = idJogador);
+END;
+$$
+    LANGUAGE plpgsql;
+
+/**
+	7. Retorna verdadeiro se jogador já esta registrado em uma equipe em determinado major.
+	id_jogador
+	id_major
+
+	RETURN boolean
+*/
+CREATE OR REPLACE FUNCTION verifica_se_jogador_pertence_a_uma_equipe_em_determinado_major(
+    idJogador int, idMajor int
+) RETURNS boolean AS
+$$
+DECLARE
+    jogador_registrado NUMERIC;
+BEGIN
+    SELECT equipe.id
+     INTO jogador_registrado
+     FROM equipe,
+          jogador,
+          majorcsgo
+     WHERE majorcsgo.id = idMajor
+         AND jogador.id = idJogador
+         AND equipe.id_jogador_1 = idJogador
+        OR equipe.id_jogador_2 = idJogador
+        OR equipe.id_jogador_3 = idJogador
+        OR equipe.id_jogador_4 = idJogador
+        OR equipe.id_jogador_5 = idJogador;
+
+    IF jogador_registrado THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$
+    LANGUAGE plpgsql;
+
+
+/**
+    8. Dado turno X, insere novo registro se:
         ( quantidade_rodadas >= 31 )
             &&
         ( vitoria_visitante - vitoria_mandante >= [2, -2] )
@@ -118,7 +182,7 @@ END;
 $$;
 
 /**
-    7. Dado partida X, insere novo registro se:
+    9. Dado partida X, insere novo registro se:
         ( quantidade_turnos < 3 )
             ||
         ( COUNT(id_equipe_vencedora) < 2 )
@@ -144,7 +208,7 @@ END;
 $$;
 
 /**
-    8. Função da trigger para atualizar as estatisticas do jogador após
+    10. Função da trigger para atualizar as estatisticas do jogador após
         nova inserção na tabela estatisticas_jogador_rodada
  */
 CREATE OR REPLACE FUNCTION atualiza_estatisticas_jogador()
@@ -166,7 +230,7 @@ BEGIN
         UPDATE estatisticas_jogador
         SET matou = matou + NEW.matou,
             assistencia = assistencia + NEW.assistencia,
-            morreu = morreu + NEW.morreu
+            morreu = morreu + IF NEW.morreu THEN RETURN 1 ELSE RETURN 0
         WHERE id_jogador = NEW.id_jogador;
     END IF;
 
