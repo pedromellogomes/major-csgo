@@ -12,3 +12,6 @@ CREATE UNIQUE INDEX partida_equipe_vencedora_idx ON partida (id_equipe_vencedora
 
 /** 5. */
 -- CREATE UNIQUE INDEX rodada_equipe_vencedora_idx ON rodada (id_equipe_vencedora);
+
+/** 6. */
+-- CREATE UNIQUE INDEX estatisticas_jogador_rodada_idx ON estatisticas_jogador_rodada(matou, assistencia, morreu);
