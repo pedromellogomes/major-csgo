@@ -68,9 +68,13 @@ GROUP BY turno.id
 ORDER BY qtd_rodadas DESC;
 
 /**
-    7.
+    7. Somatório de matou + morreu + assistencia para gerar uma pontuação
+    Qual jogador mais pontuou e em qual rodada?
  */
-
+SELECT ejr.id_rodada,
+       ejr.id_jogador,
+       CAST(ejr.matou AS FLOAT) + CAST(ejr.assistencia AS FLOAT) + CAST(ejr.morreu AS FLOAT) AS KDA
+FROM estatisticas_jogador_rodada ejr;
 /**
     8.
  */
