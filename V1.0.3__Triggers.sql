@@ -26,3 +26,12 @@ CREATE TRIGGER atualiza_estatisticas_jogador
     ON estatisticas_jogador_rodada
     FOR EACH ROW
 EXECUTE FUNCTION atualiza_estatisticas_jogador();
+
+/**
+    4. Ao registrar nova equipe, validar se cada jogador já não esta presente em outra equipe
+	para impedir que o mesmo jogador seja registrado em duas equipes diferentes
+ */
+
+/**
+	5.
+*/
