@@ -1,4 +1,4 @@
-create table majorcsgo
+create table major
 (
     id     serial  not null,
     edicao integer not null,
@@ -26,21 +26,21 @@ create table organizacao
 
 create table jogador
 (
-    id        serial  not null,
-    nome      varchar(100),
+    id   serial not null,
+    nome varchar(100),
 
     primary key (id)
 );
 
 create table equipe
 (
-    id serial not null,
+    id             serial  not null,
     id_organizacao integer not null,
-    id_jogador_1 integer not null,
-    id_jogador_2 integer not null,
-    id_jogador_3 integer not null,
-    id_jogador_4 integer not null,
-    id_jogador_5 integer not null,
+    id_jogador_1   integer not null,
+    id_jogador_2   integer not null,
+    id_jogador_3   integer not null,
+    id_jogador_4   integer not null,
+    id_jogador_5   integer not null,
 
     primary key (id),
     foreign key (id_organizacao) references organizacao (id),
@@ -52,16 +52,18 @@ create table equipe
 );
 
 alter table equipe
-    add constraint uk_equipe unique (id_organizacao, id_jogador_1, id_jogador_2, id_jogador_3, id_jogador_4, id_jogador_5);
+    add constraint uk_equipe unique (id_organizacao, id_jogador_1, id_jogador_2, id_jogador_3, id_jogador_4,
+                                     id_jogador_5);
 
 create table equipe_major
 (
-    id        serial  not null,
-    id_major  integer not null,
-    id_equipe integer not null,
+    id             serial  not null,
+    id_major       integer not null,
+    id_equipe      integer not null,
+    posicao_tabela integer not null,
 
     primary key (id),
-    foreign key (id_major) references majorcsgo (id),
+    foreign key (id_major) references major (id),
     foreign key (id_equipe) references equipe (id)
 );
 
@@ -76,14 +78,11 @@ create table partida
 (
     id                  serial  not null,
     id_major            integer not null,
-    id_equipe_mandante  integer not null,
-    id_equipe_visitante integer not null,
+
     id_equipe_vencedora integer,
 
     primary key (id),
-    foreign key (id_major) references majorcsgo (id),
-    foreign key (id_equipe_mandante) references equipe_major (id),
-    foreign key (id_equipe_visitante) references equipe_major (id),
+    foreign key (id_major) references major (id),
     foreign key (id_equipe_vencedora) references equipe_major (id)
 );
 
@@ -97,11 +96,15 @@ create table turno
     id                  serial  not null,
     id_partida          integer not null,
     id_mapa             integer not null,
+    id_equipe_mandante  integer not null,
+    id_equipe_visitante integer not null,
     id_equipe_vencedora integer,
 
     primary key (id),
     foreign key (id_partida) references partida (id),
     foreign key (id_mapa) references mapa (id),
+    foreign key (id_equipe_mandante) references equipe_major (id),
+    foreign key (id_equipe_visitante) references equipe_major (id),
     foreign key (id_equipe_vencedora) references equipe_major (id)
 );
 
