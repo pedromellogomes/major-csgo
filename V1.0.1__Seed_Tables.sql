@@ -1,4 +1,4 @@
-INSERT INTO majorcsgo (edicao, local, data)
+INSERT INTO major (edicao, local, data)
 VALUES (1, 'Rio', '2022-08-11');
 
 INSERT INTO mapa (nome)
@@ -24,17 +24,17 @@ INSERT INTO equipe (id_organizacao, id_jogador_1, id_jogador_2, id_jogador_3, id
 VALUES (1, 1, 2, 3, 4, 5),
        (2, 6, 7, 8, 9, 10);
 
-INSERT INTO equipe_major (id_major, id_equipe)
-VALUES (1, 1),
-       (1, 2);
-
-INSERT INTO partida (id_major, id_equipe_mandante, id_equipe_visitante, id_equipe_vencedora)
-VALUES (1, 1, 2, 1);
-
-INSERT INTO turno (id_partida, id_mapa, id_equipe_vencedora)
+INSERT INTO equipe_major (id_major, id_equipe, posicao_tabela)
 VALUES (1, 1, 1),
-       (1, 1, 2),
-       (1, 1, 1);
+       (1, 2, 2);
+
+INSERT INTO partida (id_major, id_equipe_vencedora)
+VALUES (1, 1);
+
+INSERT INTO turno (id_partida, id_mapa, id_equipe_mandante, id_equipe_visitante, id_equipe_vencedora)
+VALUES (1, 1, 1, 2, 1),
+       (1, 1, 2, 1, 2),
+       (1, 1, 1, 2, 1);
 
 INSERT INTO rodada (id_turno, id_equipe_vencedora)
 VALUES (1, 1),
